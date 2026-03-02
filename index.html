@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Relation Sim | QT-Aenamo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <main class="chat-area">
+            <header>
+                <div id="tutorial">💡 연습 모드: 캐릭터의 속마음이 작게 표시됩니다. (클릭 시 닫힘)</div>
+                <div class="mode-switch">
+                    연습 <input type="checkbox" id="modeToggle"> 실전
+                </div>
+            </header>
+            <div id="chatWindow">
+                </div>
+            <div class="input-group">
+                <textarea id="userInput" placeholder="대화를 입력하세요..." rows="1"></textarea>
+                <button id="sendBtn">전송</button>
+            </div>
+        </main>
+
+        <aside class="side-tab">
+            <section class="status-panel">
+                <h3>📊 실시간 심리 상태</h3>
+                <div class="stat-item">호감도: <span id="likability">50</span> <small id="diff_l"></small></div>
+                <div class="stat-item">신뢰도: <span id="trust">50</span> <small id="diff_t"></small></div>
+                <div class="stat-item">긴장감: <span id="tension">20</span> <small id="diff_n"></small></div>
+                <div class="stat-item">방어기제: <span id="defense">10</span> <small id="diff_d"></small></div>
+            </section>
+            <section class="profile-panel">
+                <h3 id="p_name">페르소나 생성 전</h3>
+                <p id="p_desc">- 말투 설정 전</p>
+                <div id="p_tags">#키워드대기중</div>
+            </section>
+            <button id="endBtn">대화 종료 및 결과 보기</button>
+        </aside>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
