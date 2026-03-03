@@ -1,0 +1,159 @@
+/* 팝업 카드 스타일 */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgb(255, 255, 255); display: flex; align-items: center; justify-content: center;
+}
+.modal-card {
+    background: white; width: 450px; padding: 30px; border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center;
+}
+.modal-header { color: #6e7ff3; font-weight: bold; font-size: 0.9em; margin-bottom: 10px; }
+h2 { margin-bottom: 25px; font-size: 1.5em; color: #111; }
+
+/* 입력 요소들 */
+textarea {
+    width: 100%; height: 120px; border: 2px solid #eef0f5; border-radius: 12px;
+    padding: 15px; resize: none; font-size: 1em; outline: none; transition: border 0.3s;
+}
+textarea:focus { border-color: #a5affb; }
+
+.input-row { display: flex; gap: 10px; margin-top: 15px; }
+.input-row input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+.btn-recommend { padding: 0 15px; background: #f0f2ff; color: #6e7ff3; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+/* 태그 및 스위치 */
+.preset-container { display: flex; gap: 8px; margin: 15px 0; justify-content: center; }
+.preset-tag { background: #f8f9fa; padding: 5px 12px; border-radius: 20px; font-size: 0.85em; cursor: pointer; color: #666; }
+.preset-tag:hover { background: #eef0f5; }
+
+.settings { background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+.setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.toggle-group { display: flex; background: #eef0f5; border-radius: 8px; padding: 3px; }
+.toggle-group button { border: none; padding: 5px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85em; }
+.toggle-group button.active { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); color: #6e7ff3; font-weight: bold; }
+
+.btn-generate {
+    width: 100%; padding: 18px; background: #a5affb; color: white; border: none;
+    border-radius: 12px; font-size: 1.1em; font-weight: bold; cursor: pointer;
+}
+/* 기본 폰트 및 배경 설정 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background-color: #f5f7fa; /* 정갈한 그레이 화이트 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* 모달 레이어 (화면 전체 덮기) */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgb(255, 255, 255); /* 배경 밝게 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* 모달 카드 디자인 */
+.modal-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    margin-top: 0;
+    font-weight: 700;
+    color: #333;
+}
+
+/* 입력 영역 스타일 */
+textarea, input[type="text"] {
+    width: 100%;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 12px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    background: #fcfcfc;
+}
+
+textarea { height: 120px; resize: none; margin-bottom: 1rem; }
+
+/* 이름 추천 행 */
+.input-row { display: flex; gap: 10px; margin-bottom: 1rem; }
+.btn-recommend {
+    white-space: nowrap;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 8px;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+/* 태그 디자인 */
+.preset-tag {
+    display: inline-block;
+    background: #f8f9fa;
+    color: #666;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-right: 5px;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    border: 1px solid #eee;
+}
+
+/* 토글 스위치 디자인 */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.toggle-group button {
+    border: 1px solid #eee;
+    background: white;
+    padding: 6px 15px;
+    cursor: pointer;
+}
+
+.toggle-group button.active {
+    background: #333;
+    color: white;
+    border-color: #333;
+}
+
+.toggle-group button:first-child { border-radius: 8px 0 0 8px; }
+.toggle-group button:last-child { border-radius: 0 8px 8px 0; }
+
+/* 하단 생성 버튼 */
+.btn-generate {
+    width: 100%;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
