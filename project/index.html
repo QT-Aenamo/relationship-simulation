@@ -5,27 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relationship Simulation - Persona Lab</title>
     <style>
-        /* 대장님을 위한 싱그러운 파스텔 그린 테마 */
+        /* 파스텔 그린 테마 */
         body {
             margin: 0; padding: 0;
             font-family: 'Pretendard', -apple-system, sans-serif;
-            /* 배경: 아주 연한 민트빛 화이트 */
+            /* (뒤에 있는) 배경: 아주 연한 민트빛 화이트 */
             background-color: #f0f4f2; 
             display: flex; justify-content: center; align-items: center;
             height: 100vh; overflow: hidden;
         }
 
-        /* 오버레이: 반투명한 흰색으로 배경을 부드럽게 */
+        /* 카드 그림자 */
         .modal-overlay {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.7);
             display: flex; justify-content: center; align-items: center;
             z-index: 9999;
-            backdrop-filter: blur(5px); /* 약간의 블러 효과로 감성 추가 */
+            backdrop-filter: blur(5px);
         }
 
-        /* 모달 카드: 깨끗한 화이트에 부드러운 그림자 */
+        /* 흰 배경 */
         .modal-card {
             background: white;
             padding: 20px;
@@ -82,7 +82,7 @@
             color: #4a5a51;
         }
 
-        /* 버튼: 차분한 파스텔 그린 */
+        /* 버튼: 파스텔 그린 */
         .btn-recommend {
             background: #e9f5ee; border: none; border-radius: 12px;
             padding: 10px 60px; color: #5a7a6a; cursor: pointer; 
@@ -117,7 +117,7 @@
         .toggle-group button:first-child { border-radius: 12px 0 0 12px; }
         .toggle-group button:last-child { border-radius: 0 12px 12px 0; }
 
-        /* 생성 버튼: 신뢰감을 주는 포레스트 그린 */
+        /* 생성 버튼: 포레스트 그린 */
         .btn-generate {
             width: 50%; 
             display: block;
@@ -137,10 +137,36 @@
             transform: translateY(-2px);
             box-shadow: 0 12px 25px rgba(90, 141, 113, 0.3);
         }
+        /* 커스텀 팝업 스타일 */
+        .custom-modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4);
+            z-index: 10000; justify-content: center; align-items: center;
+            backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 20px;
+            width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e2eee8;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-content p { color: #4a5a51; font-weight: 600; margin-bottom: 20px; }
+        .btn-close {
+            background: #5a8d71; color: white; border: none;
+            padding: 10px 25px; border-radius: 10px; cursor: pointer;
+            font-weight: 800; transition: background 0.2s;
+        }
+        .btn-close:hover { background: #4a7a60; }
     </style>
 </head>
-<body>
 
+
+<body>
 <div id="modalOverlay" class="modal-overlay">
     <div class="modal-card">
         <div class="modal-header">관계 시뮬레이션</div>
@@ -176,5 +202,89 @@
     </div>
 </div>
 
+<div id="customModal" class="custom-modal">
+    <div class="modal-content">
+        <p id="modalMessage">여기에 메시지가 뜹니다.</p>
+        <button class="btn-close" onclick="closeModal()">확인</button>
+    </div>
+</div>
 </body>
+<script>
+    // 1. 한국어 조사 판별 함수 (그레고르와! 이상과!)
+    function getJosa(name, type) {
+        if (!name) return name;
+        const charCode = name.charCodeAt(name.length - 1);
+        if (charCode < 44032 || charCode > 55203) return name + (type === '와과' ? '와' : '를');
+        const hasLastLetter = (charCode - 44032) % 28 !== 0;
+        if (type === '와과') return hasLastLetter ? name + '과' : name + '와';
+        return hasLastLetter ? name + '을' : name + '를';
+    }
+
+    // 2. 예쁜 팝업(모달) 제어 함수
+    function showModal(msg) {
+        const modal = document.getElementById('customModal');
+        const modalMessage = document.getElementById('modalMessage');
+        if (modal && modalMessage) {
+            modalMessage.innerText = msg;
+            modal.style.display = 'flex';
+        } else {
+            // 혹시 모달 HTML을 아직 안 만드셨을 경우를 대비한 보험
+            alert(msg);
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('customModal').style.display = 'none';
+    }
+
+    // 3. 설정 변수
+    let config = {
+        charTrait: "",
+        situation: "",
+        charName: "",
+        speechStyle: "존댓말",
+        firstTurn: "내가 먼저"
+    };
+
+    window.onload = function() {
+        // 토글 버튼 상호작용
+        const toggleGroups = document.querySelectorAll('.toggle-group');
+        toggleGroups.forEach((group, index) => {
+            const buttons = group.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.onclick = function() {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    if (index === 0) config.speechStyle = this.innerText;
+                    else config.firstTurn = this.innerText;
+                };
+            });
+        });
+
+        // 이름 추천 버튼
+        const recommendBtn = document.querySelector('.btn-recommend');
+        recommendBtn.onclick = function() {
+            const names = ["그레고르", "싱클레어", "홍루", "이상", "파우스트"];
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            document.getElementById('charName').value = randomName;
+            config.charName = randomName;
+        };
+
+        // 생성하기 버튼 (alert 대신 showModal 사용!)
+        const generateBtn = document.querySelector('.btn-generate');
+        generateBtn.onclick = function() {
+            config.charTrait = document.getElementById('charTrait').value;
+            config.situation = document.getElementById('situation').value;
+            config.charName = document.getElementById('charName').value;
+
+            if (!config.charTrait || !config.situation) {
+                showModal("성격과 상황을 모두 입력해야 시뮬레이션을 시작할 수 있습니다.");
+                return;
+            }
+
+            const josaName = getJosa(config.charName, '와과');
+            showModal(`${josaName}의 시뮬레이션을 준비합니다!`);
+        };
+    };
+</script>
 </html>
