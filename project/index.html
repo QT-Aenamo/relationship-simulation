@@ -162,52 +162,170 @@
             font-weight: 800; transition: background 0.2s;
         }
         .btn-close:hover { background: #4a7a60; }
+        /* 대화창 컨테이너 */
+        /* 기존 .chat-screen 수정 */
+        .chat-screen {
+            display: none; /* 처음엔 숨김 */
+            width: 95%; max-width: 1200px; height: 90vh; /* 사진처럼 넓게 설정 */
+            background: white; border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(100, 120, 110, 0.1);
+            border: 1px solid #e2eee8;
+            position: relative;
+            z-index: 10001; /* 설정창보다 위에 오도록 */
+        }
+
+        /* 내부 컨테이너 배치 */
+        .chat-container {
+            display: flex; width: 100%; height: 100%;
+        }
+
+        /* 1. 대화 구역: 세로로 쌓이고 빈틈없이 채우기 */
+        .chat-main { 
+           flex: 7; 
+            display: flex; 
+            flex-direction: column; /* 요소들을 위아래로 배치 */
+            height: 100%; 
+        }
+
+        /* 2. 대화 기록창: 남은 공간을 다 차지해서 입력창을 아래로 밀어내기 */
+        #chatHistory {
+            flex: 1; /* 이 설정이 있어야 입력창이 아래로 내려갑니다 */
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* 3. 입력창 구역: 맨 아래에 딱 붙이기 */
+        .chat-input-area {
+            margin-top: auto; /* 위쪽 여백을 최대로 해서 아래로 밀기 */
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e6efea;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-sidebar {
+            flex: 3; background: #f8fbf9; padding: 25px;
+            display: flex; flex-direction: column; gap: 30px;
+            min-width: 250px;
+        }
+        /* 바 배경 (회색 길) */
+        .stat-bar-bg { 
+            width: 100%; height: 8px; background: #eef2f0; 
+            border-radius: 4px; overflow: hidden; 
+        }
+
+        /* 바 채우기 (색상 게이지) */
+        .stat-bar-fill { 
+            height: 100%; transition: width 0.6s ease; 
+            border-radius: 4px; 
+        }
+
+        /* 라벨 정렬 */
+        .stat-label { 
+            display: flex; justify-content: space-between; 
+            font-size: 0.85rem; margin-bottom: 8px; 
+            color: #4a5a51; font-weight: 700; 
+        }
+        #chatTitle {
+            margin: 20px 0 10px 40px; /* 위 20px, 오른쪽 0, 아래 10px, 왼쪽 40px */
+            font-size: 1.2rem;
+            color: #3e4d44;
+            font-weight: 800;
+        }
     </style>
 </head>
 
 
 <body>
-<div id="modalOverlay" class="modal-overlay">
-    <div class="modal-card">
-        <div class="modal-header">관계 시뮬레이션</div>
-        <h2>시뮬레이션 설정</h2>
-        <h3>페르소나</h3>
-        <textarea id="charTrait" placeholder="대화할 상대의 성격을 상세히 묘사하세요..."></textarea>
-        <h3>상황</h3>
-        <textarea id="situation" placeholder="대화할 상황을 상세히 묘사하세요..."></textarea>
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">관계 시뮬레이션</div>
+            <h2>시뮬레이션 설정</h2>
+            <h3>페르소나</h3>
+            <textarea id="charTrait" placeholder="대화할 상대의 성격을 상세히 묘사하세요..."></textarea>
+            <h3>상황</h3>
+            <textarea id="situation" placeholder="대화할 상황을 상세히 묘사하세요..."></textarea>
 
-        <div class="input-row">
-            <input type="text" id="charName" placeholder="페르소나 이름">
-            <button class="btn-recommend">이름 추천</button>
-        </div>
+            <div class="input-row">
+                <input type="text" id="charName" placeholder="페르소나 이름">
+                <button class="btn-recommend">이름 추천</button>
+            </div>
 
-        <div class="settings">
-            <div class="setting-item">
-                <span>기본 어투</span>
-                <div class="toggle-group">
-                    <button class="active">존댓말</button>
-                    <button>반말</button>
+            <div class="settings">
+                <div class="setting-item">
+                    <span>기본 어투</span>
+                    <div class="toggle-group">
+                        <button class="active">존댓말</button>
+                        <button>반말</button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span>선공 설정</span>
+                    <div class="toggle-group">
+                        <button class="active">내가 먼저</button>
+                        <button>상대가 먼저</button>
+                    </div>
                 </div>
             </div>
-            <div class="setting-item">
-                <span>선공 설정</span>
-                <div class="toggle-group">
-                    <button class="active">내가 먼저</button>
-                    <button>상대가 먼저</button>
+
+            <button class="btn-generate">페르소나 생성하기</button>
+        </div>
+    </div>
+
+    <div id="customModal" class="custom-modal">
+        <div class="modal-content">
+            <p id="modalMessage">여기에 메시지가 뜹니다.</p>
+            <button class="btn-close" onclick="closeModal()">확인</button>
+        </div>
+    </div>
+
+    <div id="chatScreen" class="chat-screen">
+        <div class="chat-container">
+            <div class="chat-main">
+                <div class="chat-header"><h4 id="chatTitle">이름</h4></div>
+                <div id="chatHistory" class="chat-history"></div>
+                <div class="chat-input-area">
+                    <input type="text" id="userInput" placeholder="메시지를 입력하세요... (Enter 전송)">
+                    <button class="btn-recommend" id="sendBtn">전송</button>
+                </div>
+            </div>
+
+            <div class="chat-sidebar">
+                <div class="sidebar-section">
+                    <h5>실시간 스탯</h5>
+                    <div class="stat-item">
+                        <div class="stat-label"><span>호감도</span><span id="val-likability">50</span></div>
+                        <div class="stat-bar-bg"><div id="bar-likability" class="stat-bar-fill" style="width: 50%; background: #4457ff;"></div></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label"><span>신뢰도</span><span id="val-trust">50</span></div>
+                        <div class="stat-bar-bg"><div id="bar-trust" class="stat-bar-fill" style="width: 50%; background: #3ae8b1;"></div></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label"><span>긴장감</span><span id="val-tension">50</span></div>
+                        <div class="stat-bar-bg"><div id="bar-tension" class="stat-bar-fill" style="width: 50%; background: #ffcc99;"></div></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label"><span>방어기제</span><span id="val-defense">50</span></div>
+                        <div class="stat-bar-bg"><div id="bar-defense" class="stat-bar-fill" style="width: 50%; background: #ff8b8b;"></div></div>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <h5>페르소나 정보</h5>
+                    <div id="personaDesc" style="font-size: 0.9rem; color: #5a6a61; line-height: 1.6; min-height: 50px;">
+                        </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h5>키워드</h5>
+                    <div id="keywordGroup" class="keyword-group">
+                        </div>
                 </div>
             </div>
         </div>
-
-        <button class="btn-generate">페르소나 생성하기</button>
     </div>
-</div>
-
-<div id="customModal" class="custom-modal">
-    <div class="modal-content">
-        <p id="modalMessage">여기에 메시지가 뜹니다.</p>
-        <button class="btn-close" onclick="closeModal()">확인</button>
-    </div>
-</div>
 </body>
 <script>
     // 1. 한국어 조사 판별 함수 (그레고르와! 이상과!)
@@ -234,7 +352,18 @@
     }
 
     function closeModal() {
+        // 1. 팝업 닫기
         document.getElementById('customModal').style.display = 'none';
+    
+        // 2. 기존 설정창(모달 오버레이) 숨기기
+        document.getElementById('modalOverlay').style.display = 'none';
+    
+        // 3. 대화창 나타내기 (flex로 설정해야 사이드바가 옆으로 붙습니다)
+        const chatScreen = document.getElementById('chatScreen');
+        chatScreen.style.display = 'flex'; 
+    
+        // 4. 이름 동기화
+        document.getElementById('chatTitle').innerText = config.charName;
     }
 
     // 3. 설정 변수
