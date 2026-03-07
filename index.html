@@ -5,12 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relationship Simulation - Persona Lab</title>
     <style>
-        /* 파스텔 그린 테마 */
+        :root {
+            --bg: #f4f4f8;
+            --surface: #ffffff;
+            --surface2: #f0f0f5;
+            --border: #dcdce8;
+            --text: #1a1a2e;
+            --text-sub: #8888aa;
+            --accent: #6a58e8;
+            --good: #2aabb5;
+            --bad: #e05555;
+            --stat1: #6a58e8;
+            --stat2: #2aabb5;
+            --stat3: #d98a40;
+            --stat4: #e05555;
+        }
+        /* 딥 블루 테마 */
         body {
             margin: 0; padding: 0;
             font-family: 'Pretendard', -apple-system, sans-serif;
-            /* (뒤에 있는) 배경: 아주 연한 민트빛 화이트 */
-            background-color: #f0f4f2; 
+            /* (뒤에 있는) 배경: 아주 연한 블루빛 화이트 */
+            background-color: var(--bg); 
             display: flex; justify-content: center; align-items: center;
             height: 100vh; overflow: hidden;
         }
@@ -27,16 +42,16 @@
 
         /* 흰 배경 */
         .modal-card {
-            background: white;
+            background: var(--surface);
             padding: 20px;
             border-radius: 0;
-            width: 200%; max-width: 1500px;
+            width: 200%; max-width: 1600px;
             box-shadow: 0 15px 35px rgba(100, 120, 110, 0.15);
-            border: 1px solid #e2eee8;
+            border: 1px solid var(--border);
         }
 
         .modal-header { 
-            color: #8da399; 
+            color: var(--text-sub); 
             font-size: 0.85rem; 
             margin-bottom: 8px; 
             font-weight: 600;
@@ -46,83 +61,95 @@
         h2 { 
             margin: 0 0 25px 0; 
             font-size: 1.6rem; 
-            color: #3e4d44; 
+            color: var(--text); 
             font-weight: 800; 
             letter-spacing: -0.5px;
         }
+/* 기존 h3 스타일에서 margin 수정 */
         h3 { 
-            margin: 0 0 25px 0; 
-            font-size: 1rem; 
-            color: #3e4d44; 
+            margin: 15px 0 5px 0; /* 위쪽 여백은 유지하되, 아래쪽 여백(입력창과의 간격)을 5px로 줄입니다 */
+            font-size: 0.9rem;    /* 라벨이 너무 크지 않게 살짝 줄여 균형을 맞춥니다 */
+            color: var(--text); 
             font-weight: 800; 
             letter-spacing: -0.5px;
         }
 
-        /* 입력창: 연한 그린 보더 */
+
+
+        /* 입력창: 연한 블루 보더 */
         textarea {
-            width: 100%; height: 90px;
-            border: 1.5px solid #e6efea; border-radius: 16px;
+            width: 100%; height: 60px;
+            border: 1.5px solid var(--border); border-radius: 16px;
             padding: 15px; box-sizing: border-box;
-            font-size: 0.95rem; background: #fafdfc;
+            font-size: 0.95rem; background: var(--surface2);
             resize: none; margin-bottom: 15px;
             transition: all 0.3s;
-            color: #4a5a51;
+            color: var(--text);
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            margin-bottom: 10px
         }
 
         textarea:focus {
-            outline: none; border-color: #a8d5ba; 
-            background: white; box-shadow: 0 0 10px rgba(168, 213, 186, 0.2);
+            outline: none; border-color: var(--accent); 
+            background: var(--surface); box-shadow: 0 0 10px rgba(106, 88, 232, 0.2);
         }
 
-        .input-row { display: flex; gap: 8px; margin-bottom: 15px; }
+        .input-row {
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 20px; 
+            align-items: center; /* 수직 정렬을 가운데로 */
+        }
+
         
         input[type="text"] {
-            flex: 1; border: 1.5px solid #e6efea; border-radius: 12px;
-            padding: 12px; font-size: 0.95rem; background: #fafdfc;
-            color: #4a5a51;
+            flex: 1; border: 1.5px solid var(--border); border-radius: 12px;
+            padding: 12px; font-size: 0.95rem; background: var(--surface2);
+            color: var(--text);
+            font-family: 'Pretendard', -apple-system, sans-serif;
         }
 
-        /* 버튼: 파스텔 그린 */
+        /* 버튼: 파스텔 블루 */
         .btn-recommend {
-            background: #e9f5ee; border: none; border-radius: 12px;
-            padding: 10px 60px; color: #5a7a6a; cursor: pointer; 
+            background: var(--surface2); border: none; border-radius: 12px;
+            padding: 10px 60px; color: var(--text-sub); cursor: pointer; 
             font-weight: 700; font-size: 0.95rem;
             transition: background 0.2s;
         }
-        .btn-recommend:hover { background: #d7ede1; }
+        .btn-recommend:hover { background: var(--border); }
 
         .preset-tag {
-            display: inline-block; background: #fff; border: 1.5px solid #f0f7f3;
+            display: inline-block; background: var(--surface); border: 1.5px solid var(--surface2);
             padding: 7px 14px; border-radius: 20px; font-size: 0.8rem;
-            color: #7a9185; margin-right: 5px; cursor: pointer; transition: 0.2s;
+            color: var(--text-sub); margin-right: 5px; cursor: pointer; transition: 0.2s;
             font-weight: 600;
         }
-        .preset-tag:hover { background: #f0f7f3; color: #4a5a51; }
+        .preset-tag:hover { background: var(--surface2); color: var(--text); }
 
         .setting-item {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px; font-size: 0.95rem; color: #5a6a61;
+            margin-bottom: 15px; font-size: 0.95rem; color: var(--text-sub);
             font-weight: 600;
         }
 
-        /* 토글: 활성화 시 딥그린 */
+        /* 토글: 활성화 시 딥블루 */
         .toggle-group button {
-            border: 1.5px solid #f0f7f3; background: white;
+            border: 1.5px solid var(--surface2); background: var(--surface);
             padding: 9px 18px; cursor: pointer; font-size: 0.85rem;
-            color: #9db2a7; font-weight: 700; transition: all 0.2s;
+            color: var(--text-sub); font-weight: 700; transition: all 0.2s;
         }
         .toggle-group button.active { 
-            background: #6da082; color: white; border-color: #6da082; 
+            background: var(--accent); color: white; border-color: var(--accent); 
         }
         .toggle-group button:first-child { border-radius: 12px 0 0 12px; }
         .toggle-group button:last-child { border-radius: 0 12px 12px 0; }
 
-        /* 생성 버튼: 포레스트 그린 */
+        /* 생성 버튼: 포레스트 블루 */
         .btn-generate {
             width: 50%; 
             display: block;
             margin: 20px auto;
-            background: #5a8d71; 
+            background: var(--accent); 
             color: white; 
         border: none;
         border-radius: 8px; 
@@ -130,13 +157,26 @@
         font-size: 1.05rem;
         font-weight: 800; 
         cursor: pointer;
-        box-shadow: 0 8px 20px rgba(90, 141, 113, 0.2);
+        box-shadow: 0 8px 20px rgba(106, 88, 232, 0.2);
         transition: transform 0.2s, box-shadow 0.2s;
         }
         .btn-generate:hover { 
             transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(90, 141, 113, 0.3);
+            box-shadow: 0 12px 25px rgba(106, 88, 232, 0.3);
         }
+        /* Placeholder 텍스트 폰트 통일 */
+        textarea::placeholder, input::placeholder {
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            color: var(--text-sub);
+        }
+        /* 대화 종료 버튼 */
+        .btn-end-chat {
+            background: var(--bad); border: none; border-radius: 8px;
+            padding: 8px 16px; color: white; cursor: pointer;
+            font-weight: 700; font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .btn-end-chat:hover { background: #c04444; }
         /* 커스텀 팝업 스타일 */
         .custom-modal {
             display: none; position: fixed; top: 0; left: 0;
@@ -145,33 +185,30 @@
             backdrop-filter: blur(3px);
         }
         .modal-content {
-            background: white; padding: 30px; border-radius: 20px;
+            background: var(--surface); padding: 30px; border-radius: 20px;
             width: 90%; max-width: 400px; text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid #e2eee8;
+            border: 1px solid var(--border);
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes popIn {
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
-        .modal-content p { color: #4a5a51; font-weight: 600; margin-bottom: 20px; }
+        .modal-content p { color: var(--text); font-weight: 600; margin-bottom: 20px; }
         .btn-close {
-            background: #5a8d71; color: white; border: none;
+            background: var(--accent); color: white; border: none;
             padding: 10px 25px; border-radius: 10px; cursor: pointer;
             font-weight: 800; transition: background 0.2s;
         }
-        .btn-close:hover { background: #4a7a60; }
+        .btn-close:hover { background: #4a3db8; }
         /* 대화창 컨테이너 */
         /* 기존 .chat-screen 수정 */
         .chat-screen {
             display: none; /* 처음엔 숨김 */
-            width: 95%; max-width: 1200px; height: 90vh; /* 사진처럼 넓게 설정 */
-            background: white; border-radius: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--surface);
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(100, 120, 110, 0.1);
-            border: 1px solid #e2eee8;
-            position: relative;
             z-index: 10001; /* 설정창보다 위에 오도록 */
         }
 
@@ -186,6 +223,20 @@
             display: flex; 
             flex-direction: column; /* 요소들을 위아래로 배치 */
             height: 100%; 
+            background: var(--surface2);
+        }
+
+        /* 얇은 헤더 스타일 */
+        .chat-header {
+            padding: 10px 20px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            font-size: 1.1rem;
+            color: var(--text);
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         /* 2. 대화 기록창: 남은 공간을 다 차지해서 입력창을 아래로 밀어내기 */
@@ -199,22 +250,46 @@
         .chat-input-area {
             margin-top: auto; /* 위쪽 여백을 최대로 해서 아래로 밀기 */
             padding: 20px;
-            background: white;
-            border-top: 1px solid #e6efea;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
             display: flex;
             gap: 10px;
         }
 
         .chat-sidebar {
-            flex: 3; background: #f8fbf9; padding: 25px;
+            flex: 1.2; background: var(--surface); padding: 25px;
             display: flex; flex-direction: column; gap: 30px;
-            min-width: 250px;
+            min-width: 180px;
         }
-        /* 바 배경 (회색 길) */
+        .sidebar-section {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+        .sidebar-section:last-child {
+            border-bottom: none;
+        }
+        .stat-item {
+            margin-bottom: 15px; /* 스탯 항목 간의 간격을 조절합니다 */
+        }
+
+        .stat-label { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 0.85rem; 
+            margin-bottom: 5px; /* 라벨과 바 사이의 간격을 살짝 띄웁니다 */
+            color: var(--text); 
+            font-weight: 700; 
+        }
+
         .stat-bar-bg { 
-            width: 100%; height: 8px; background: #eef2f0; 
-            border-radius: 4px; overflow: hidden; 
+            width: 100%; 
+            height: 2px; /* 바의 높이를 조금 더 가시성 있게 키웠습니다 */
+            background: #e0e0e0; 
+            border-radius: 3px; 
+            overflow: hidden; 
+            border: 1px solid #c0c0c0; /* 바 주변에 얇은 테두리를 추가하여 더 선명하게 보이도록 합니다 */
         }
+
 
         /* 바 채우기 (색상 게이지) */
         .stat-bar-fill { 
@@ -222,17 +297,45 @@
             border-radius: 4px; 
         }
 
-        /* 라벨 정렬 */
-        .stat-label { 
-            display: flex; justify-content: space-between; 
-            font-size: 0.85rem; margin-bottom: 8px; 
-            color: #4a5a51; font-weight: 700; 
+        
+        .sidebar-section h5 {
+            font-size: 0.8rem; color: var(--text-sub); margin-bottom: 15px;
         }
         #chatTitle {
-            margin: 20px 0 10px 40px; /* 위 20px, 오른쪽 0, 아래 10px, 왼쪽 40px */
+            margin: 0; /* 헤더 패딩으로 위치 조정 */
             font-size: 1.2rem;
-            color: #3e4d44;
+            color: var(--text);
             font-weight: 800;
+        }
+        /* 툴팁 스타일 */
+        /* 툴팁 스타일 수정 */
+        .tooltip-box {
+            position: absolute;
+            background: white;
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            z-index: 20000;
+            pointer-events: none;
+            display: none; /* 초기값 */
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+            /* 애니메이션 추가: 0.4초 동안 튀면서 나타남 */
+            animation: bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: bottom center; /* 아래쪽 중심에서 튀어나오게 설정 */
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 툴팁이 들어갈 버튼의 부모를 relative로 지정해야 위치가 고정됩니다 */
+        #mode-practice {
+            position: relative;
         }
     </style>
 </head>
@@ -247,11 +350,23 @@
             <textarea id="charTrait" placeholder="대화할 상대의 성격을 상세히 묘사하세요..."></textarea>
             <h3>상황</h3>
             <textarea id="situation" placeholder="대화할 상황을 상세히 묘사하세요..."></textarea>
+            <h3>말투</h3>
+            <textarea id="speechStyleInput" placeholder="말투를 상세히 묘사하세요..."></textarea>
 
-            <div class="input-row">
-                <input type="text" id="charName" placeholder="페르소나 이름">
-                <button class="btn-recommend">이름 추천</button>
+        <div class="input-row" style="display: flex; align-items: center; margin-bottom: 30px;">
+    
+            <div style="display: flex; gap: 10px; flex: 2;">
+                <input type="text" id="charName" placeholder="이름" style="flex: 1;"> 
+                <button class="btn-recommend" id="btn-recommend-small" style="flex: 0.25; padding: 10px;">이름 추천</button>
             </div>
+
+            <div style="min-width: 200px;"></div> 
+
+            <div class="toggle-group" style="flex: 1; display: flex;">
+                <button class="active" id="mode-practice" style="flex: 1;">연습 모드</button>
+                <button id="mode-real" style="flex: 1;">실전 모드</button>
+            </div>
+        </div>
 
             <div class="settings">
                 <div class="setting-item">
@@ -284,7 +399,10 @@
     <div id="chatScreen" class="chat-screen">
         <div class="chat-container">
             <div class="chat-main">
-                <div class="chat-header"><h4 id="chatTitle">이름</h4></div>
+                <div class="chat-header">
+                    <h4 id="chatTitle">이름</h4>
+                    <button class="btn-end-chat" onclick="endChat()">대화 종료</button>
+                </div>
                 <div id="chatHistory" class="chat-history"></div>
                 <div class="chat-input-area">
                     <input type="text" id="userInput" placeholder="메시지를 입력하세요... (Enter 전송)">
@@ -296,31 +414,25 @@
                 <div class="sidebar-section">
                     <h5>실시간 스탯</h5>
                     <div class="stat-item">
-                        <div class="stat-label"><span>호감도</span><span id="val-likability">50</span></div>
-                        <div class="stat-bar-bg"><div id="bar-likability" class="stat-bar-fill" style="width: 50%; background: #4457ff;"></div></div>
+                        <div class="stat-label"><span>호감도</span><span id="val-likability" style="color: var(--stat1);">50</span></div>
+                        <div class="stat-bar-bg"><div id="bar-likability" class="stat-bar-fill" style="width: 50%; background: var(--stat1);"></div></div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label"><span>신뢰도</span><span id="val-trust">50</span></div>
-                        <div class="stat-bar-bg"><div id="bar-trust" class="stat-bar-fill" style="width: 50%; background: #3ae8b1;"></div></div>
+                        <div class="stat-label"><span>신뢰도</span><span id="val-trust" style="color: var(--stat2);">50</span></div>
+                        <div class="stat-bar-bg"><div id="bar-trust" class="stat-bar-fill" style="width: 50%; background: var(--stat2);"></div></div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label"><span>긴장감</span><span id="val-tension">50</span></div>
-                        <div class="stat-bar-bg"><div id="bar-tension" class="stat-bar-fill" style="width: 50%; background: #ffcc99;"></div></div>
+                        <div class="stat-label"><span>긴장감</span><span id="val-tension" style="color: var(--stat3);">50</span></div>
+                        <div class="stat-bar-bg"><div id="bar-tension" class="stat-bar-fill" style="width: 50%; background: var(--stat3);"></div></div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label"><span>방어기제</span><span id="val-defense">50</span></div>
-                        <div class="stat-bar-bg"><div id="bar-defense" class="stat-bar-fill" style="width: 50%; background: #ff8b8b;"></div></div>
+                        <div class="stat-label"><span>방어기제</span><span id="val-defense" style="color: var(--stat4);">50</span></div>
+                        <div class="stat-bar-bg"><div id="bar-defense" class="stat-bar-fill" style="width: 50%; background: var(--stat4);"></div></div>
                     </div>
                 </div>
                 <div class="sidebar-section">
                     <h5>페르소나 정보</h5>
-                    <div id="personaDesc" style="font-size: 0.9rem; color: #5a6a61; line-height: 1.6; min-height: 50px;">
-                        </div>
-                </div>
-
-                <div class="sidebar-section">
-                    <h5>키워드</h5>
-                    <div id="keywordGroup" class="keyword-group">
+                    <div id="personaDesc" style="font-size: 0.9rem; color: var(--text-sub); line-height: 1.6; min-height: 50px;">
                         </div>
                 </div>
             </div>
@@ -366,54 +478,102 @@
         document.getElementById('chatTitle').innerText = config.charName;
     }
 
+    function endChat() {
+        // 대화 종료: 아무 동작도 하지 않음 (비워 둔 상태)
+    }
+
     // 3. 설정 변수
     let config = {
         charTrait: "",
         situation: "",
+        speechStyleInput: "",
         charName: "",
         speechStyle: "존댓말",
-        firstTurn: "내가 먼저"
+        firstTurn: "내가 먼저",
+        mode: "연습" // 추가
     };
 
     window.onload = function() {
-        // 토글 버튼 상호작용
+        // 1. 기존 토글 버튼 및 기능 설정
         const toggleGroups = document.querySelectorAll('.toggle-group');
-        toggleGroups.forEach((group, index) => {
+        
+        // 모드 선택 버튼(연습/실전)을 위한 별도 변수
+        const modePractice = document.getElementById('mode-practice');
+        const modeReal = document.getElementById('mode-real');
+
+        // 툴팁 요소 생성
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip-box';
+        tooltip.innerText = '연습모드에서는 실시간으로 페르소나의 감정과 속마음을 볼 수 있어요!';
+        document.body.appendChild(tooltip);
+
+        // 연습 모드 버튼 이벤트
+        modePractice.addEventListener('mouseover', () => {
+            const rect = modePractice.getBoundingClientRect();
+
+            // 1. 위치 설정
+            tooltip.style.left = rect.left + 'px'; 
+            tooltip.style.top = (rect.top + window.scrollY - 45) + 'px';
+
+            // 2. 애니메이션 재시작을 위한 강제 리플로우(reflow)
+            tooltip.style.display = 'block';
+            tooltip.style.animation = 'none'; // 애니메이션 초기화
+            tooltip.offsetHeight; // 브라우저가 요소를 다시 계산하게 만듦 (핵심!)
+            tooltip.style.animation = 'bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'; // 애니메이션 재적용
+        });
+
+modePractice.addEventListener('mouseout', () => {
+    tooltip.style.display = 'none';
+});
+
+        // 모든 토글 그룹 이벤트 설정
+        toggleGroups.forEach((group) => {
             const buttons = group.querySelectorAll('button');
             buttons.forEach(btn => {
                 btn.onclick = function() {
+                    // 클릭한 그룹 내의 다른 버튼 활성화 해제
                     buttons.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    if (index === 0) config.speechStyle = this.innerText;
-                    else config.firstTurn = this.innerText;
+
+                    // 설정 값 업데이트
+                    if (this.id === 'mode-practice') config.mode = "연습";
+                    else if (this.id === 'mode-real') config.mode = "실전";
+                    else if (group.parentElement.innerText.includes('기본 어투')) config.speechStyle = this.innerText;
+                    else if (group.parentElement.innerText.includes('선공 설정')) config.firstTurn = this.innerText;
                 };
-            });
         });
+    });
 
-        // 이름 추천 버튼
-        const recommendBtn = document.querySelector('.btn-recommend');
-        recommendBtn.onclick = function() {
-            const names = ["그레고르", "싱클레어", "홍루", "이상", "파우스트"];
-            const randomName = names[Math.floor(Math.random() * names.length)];
-            document.getElementById('charName').value = randomName;
-            config.charName = randomName;
-        };
-
-        // 생성하기 버튼 (alert 대신 showModal 사용!)
-        const generateBtn = document.querySelector('.btn-generate');
-        generateBtn.onclick = function() {
-            config.charTrait = document.getElementById('charTrait').value;
-            config.situation = document.getElementById('situation').value;
-            config.charName = document.getElementById('charName').value;
-
-            if (!config.charTrait || !config.situation) {
-                showModal("성격과 상황을 모두 입력해야 시뮬레이션을 시작할 수 있습니다.");
-                return;
-            }
-
-            const josaName = getJosa(config.charName, '와과');
-            showModal(`${josaName}의 시뮬레이션을 준비합니다!`);
-        };
+    // 이름 추천 버튼
+    document.querySelector('.btn-recommend').onclick = function() {
+        const names = ["그레고르", "싱클레어", "홍루", "이상", "파우스트"];
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        document.getElementById('charName').value = randomName;
+        config.charName = randomName;
     };
+
+    // 생성하기 버튼
+    document.querySelector('.btn-generate').onclick = function() {
+        config.charTrait = document.getElementById('charTrait').value;
+        config.situation = document.getElementById('situation').value;
+        config.speechStyleInput = document.getElementById('speechStyleInput').value;
+        config.charName = document.getElementById('charName').value;
+
+        if (!config.charTrait || !config.situation || !config.speechStyleInput) {
+            showModal("성격, 상황, 말투를 모두 입력해야 시뮬레이션을 시작할 수 있습니다.");
+            return;
+        }
+
+        // 실전 모드일 경우 사이드바 스탯 섹션 숨기기
+        if (config.mode === "실전") {
+            document.querySelector('.sidebar-section').style.display = 'none';
+        } else {
+            document.querySelector('.sidebar-section').style.display = 'block';
+        }
+
+        const josaName = getJosa(config.charName, '와과');
+        showModal(`${josaName}의 시뮬레이션을 준비합니다!`);
+    };
+};
 </script>
 </html>
